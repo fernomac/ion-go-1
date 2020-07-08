@@ -464,10 +464,8 @@ func buildIndex(symbols []string, offset uint64) map[string]uint64 {
 	index := make(map[string]uint64)
 
 	for i, sym := range symbols {
-		if sym != "" {
-			if _, ok := index[sym]; !ok {
-				index[sym] = offset + uint64(i)
-			}
+		if _, ok := index[sym]; !ok {
+			index[sym] = offset + uint64(i)
 		}
 	}
 

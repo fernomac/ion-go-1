@@ -416,7 +416,8 @@ func (r *binaryReader) readFieldName() error {
 		return err
 	}
 
-	r.fieldName = r.resolve(id)
+	fn := r.resolve(id)
+	r.fieldName = &fn
 	return nil
 }
 
