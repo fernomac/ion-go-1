@@ -17,7 +17,6 @@ package ion
 
 import (
 	"bytes"
-	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -401,7 +400,7 @@ func testEquivalency(t *testing.T, fp string, eq bool) {
 		ionType := r.Type()
 		switch ionType {
 		case StructType, ListType, SexpType:
-			fmt.Printf("Checking values of top level %s #%d ...\n", ionType.String(), topLevelCounter)
+			// fmt.Printf("Checking values of top level %s #%d ...\n", ionType.String(), topLevelCounter)
 			var values []ionItem
 			err := r.StepIn()
 			if err != nil {

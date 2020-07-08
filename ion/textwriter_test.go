@@ -16,6 +16,19 @@ func TestWriteTextTopLevelFieldName(t *testing.T) {
 	})
 }
 
+func TestWriteTextEmptyFieldName(t *testing.T) {
+	testTextWriter(t, "{'':empty}", func(w Writer) {
+		w.BeginStruct()
+
+		w.FieldName("")
+		w.WriteSymbol("empty")
+
+		if err := w.EndStruct(); err != nil {
+			t.Fatal(err)
+		}
+	})
+}
+
 func TestWriteTextEmptyStruct(t *testing.T) {
 	testTextWriter(t, "{}", func(w Writer) {
 		if err := w.BeginStruct(); err != nil {

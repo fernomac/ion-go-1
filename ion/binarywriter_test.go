@@ -37,6 +37,26 @@ func TestWriteBinaryStruct(t *testing.T) {
 	})
 }
 
+func TestWriteBinaryEmptyFieldName(t *testing.T) {
+	eval := []byte{
+		0xD2, // {
+		0xF0, // ''
+		0x7F, // null.symbol
+		// }
+	}
+
+	testBinaryWriter(t, eval, func(w Writer) {
+		w.BeginStruct()
+
+		w.FieldName("")
+		w.WriteNullType(SymbolType)
+
+		if err := w.EndStruct(); err != nil {
+			t.Fatal(err)
+		}
+	})
+}
+
 func TestWriteBinarySexp(t *testing.T) {
 	eval := []byte{
 		0xC0,                   // ()
@@ -330,16 +350,17 @@ func testBinaryWriter(t *testing.T, eval []byte, f func(w Writer)) {
 
 	prefix := []byte{
 		0xE0, 0x01, 0x00, 0xEA, // $ion_1_0
-		0xEE, 0x9F, 0x81, 0x83, 0xDE, 0x9B, // $ion_symbol_table::{
+		0xEE, 0xA0, 0x81, 0x83, 0xDE, 0x9C, // $ion_symbol_table::{
 		0x86, 0xBE, 0x8E, // imports:[
 		0xDD,                                // {
 		0x84, 0x85, 'b', 'o', 'g', 'u', 's', // name: "bogus"
 		0x85, 0x21, 0x2A, // version: 42
 		0x88, 0x21, 0x64, // max_id: 100
 		// }]
-		0x87, 0xB8, // symbols: [
+		0x87, 0xB9, // symbols: [
 		0x83, 'f', 'o', 'o', // "foo"
 		0x83, 'b', 'a', 'r', // "bar"
+		0x80,
 		// ]
 		// }
 	}
@@ -377,6 +398,7 @@ func writeBinary(t *testing.T, f func(w Writer)) []byte {
 	w := NewBinaryWriterLST(&buf, NewLocalSymbolTable(bogus, []string{
 		"foo",
 		"bar",
+		"",
 	}))
 
 	f(w)

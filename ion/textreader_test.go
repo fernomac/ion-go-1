@@ -19,6 +19,15 @@ func TestIgnoreValues(t *testing.T) {
 	_eof(t, r)
 }
 
+func TestTextEmptyFieldName(t *testing.T) {
+	r := NewReaderStr("{'':null.symbol}")
+
+	_structAF(t, r, "", nil, func(t *testing.T, r Reader) {
+		_nullAF(t, r, SymbolType, "", nil)
+	})
+	_eof(t, r)
+}
+
 func TestReadSexps(t *testing.T) {
 	test := func(str string, f containerhandler) {
 		t.Run(str, func(t *testing.T) {
